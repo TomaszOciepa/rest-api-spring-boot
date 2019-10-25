@@ -1,50 +1,46 @@
 package pl.tom.restapispringboot.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.tom.restapispringboot.dao.entity.VideoCassette;
+import pl.tom.restapispringboot.manager.VideoCassetteManager;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cassetts")
 public class VideoCassetteApi {
 
-    private List<VideoCassette> videoCassettes;
+    private VideoCassetteManager videoCassettes;
 
-    public VideoCassetteApi() {
-        videoCassettes = new ArrayList<>();
-        videoCassettes.add(new VideoCassette(1L, "Titanic", LocalDate.of(1991, 01, 01)));
-        videoCassettes.add(new VideoCassette(2L, "Pulp Fiction", LocalDate.of(1995, 02, 02)));
+    @Autowired
+    public VideoCassetteApi(VideoCassetteManager videoCassettes) {
+        this.videoCassettes = videoCassettes;
     }
 
     @GetMapping("/all")
-    public List<VideoCassette> getAll() {
-        return videoCassettes;
+    public Iterable<VideoCassette> getAll() {
+        return videoCassettes.findAll();
     }
 
     @GetMapping
-    public VideoCassette getById(@RequestParam int index) {
-        Optional<VideoCassette> first = videoCassettes.stream()
-                .filter(element -> element.getId() == index).findFirst();
-        return first.get();
+    public Optional<VideoCassette> getById(@RequestParam Long index) {
+        return videoCassettes.findById(index);
     }
 
     @PostMapping
-    public boolean addVideo(@RequestBody VideoCassette videoCassette) {
-        return videoCassettes.add(videoCassette);
+    public VideoCassette addVideo(@RequestBody VideoCassette videoCassette) {
+        return videoCassettes.save(videoCassette);
     }
 
     @PutMapping
-    public boolean updateVideo(@RequestBody VideoCassette videoCassette) {
-        return videoCassettes.add(videoCassette);
+    public VideoCassette updateVideo(@RequestBody VideoCassette videoCassette) {
+        return videoCassettes.save(videoCassette);
     }
 
     @DeleteMapping
-    public boolean deleteVideo(@RequestParam int index) {
-        return videoCassettes.removeIf(element -> element.getId() == index);
+    public void deleteVideo(@RequestParam Long index) {
+        videoCassettes.deleteById(index);
     }
 
 }
