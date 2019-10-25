@@ -1,6 +1,7 @@
-package pl.tom.restapispringboot;
+package pl.tom.restapispringboot.api;
 
 import org.springframework.web.bind.annotation.*;
+import pl.tom.restapispringboot.dao.entity.VideoCassette;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
